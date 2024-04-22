@@ -29,6 +29,8 @@ public class FileSystem {
         root.addElement(home);
         home.addElement(user);
         user.addElement(Documents);
+        Documents.addElement(project1);
+        Documents.addElement(project2);
 
         project2.addElement(report);
         project2.addElement(notes);
@@ -141,12 +143,13 @@ public class FileSystem {
         return target;
     }
 
-    public boolean searchDirectory(String name) {
+    public Directory searchDirectory(String name) {
         // searches recursively starting from root.
-        if (findDirectoryRecursive(name, root) != null)
-            return true;
-        else
-            return false;
+        Directory dir;
+
+        dir = findDirectoryRecursive(name, root);
+
+        return dir;
 
     }
 
@@ -164,18 +167,27 @@ public class FileSystem {
 
         element = returnElement(name, directoryToSearch);
 
-        for (Directory subDirectory : directoryToSearch.getInclusiveSubDirectories()) {
-            if (findDirectoryRecursive(name, subDirectory) != null) {
-                return (Directory) subDirectory.getChildDirectory(name);
-            }
+        ArrayList<Directory> subDirectories = directoryToSearch.getSubDirectories();
 
-            else {
-                continue;
+        // Remove root directory if it is included in the list of subdirectories
+        if (subDirectories != null && subDirectories.size() > 0 && subDirectories.get(0).equals(root)) {
+            subDirectories.remove(0);
+        }
+
+        // check current directory
+        if (element != null && element instanceof Directory) {
+            return (Directory) element;
+        }
+
+        // Iterate through the subdirectories
+        for (Directory subDirectory : subDirectories) {
+            Directory foundDirectory = findDirectoryRecursive(name, subDirectory);
+            if (foundDirectory != null) {
+                return foundDirectory;
             }
         }
 
         return null;
-
     }
 
     private File findFileRecursive(String name, Directory directoryToSearch) {
@@ -183,32 +195,38 @@ public class FileSystem {
 
         element = returnElement(name, directoryToSearch);
 
+        // check current directory
         if (element != null && element instanceof File) {
             return (File) element;
         }
 
-        for (Directory subDirectory : directoryToSearch.getInclusiveSubDirectories()) {
-            File file = findFileRecursive(name, subDirectory);
 
-            if (file != null && file instanceof File) {
-                return file;
-            }
+        //try going with the subDirectories instead..
 
-            else {
-                continue;
+        ArrayList<Directory> subDirectories = directoryToSearch.getSubDirectories();
+
+        if (subDirectories == null) {
+            return null;
+        }
+
+        // Remove root directory if it is included in the list of subdirectories
+        if (subDirectories.size() > 0 && subDirectories.get(0).equals(root)) {
+            subDirectories.remove(0);
+        }
+
+        // Iterate through the subdirectories
+        for (Directory subDirectory : subDirectories) {
+            File foundFile = findFileRecursive(name, subDirectory);
+            if (foundFile != null) {
+                return foundFile;
             }
         }
 
-        // couldn't find it.
         return null;
     }
 
-    public boolean searchFile(String name) {
-        if (findFileRecursive(name, root) != null)
-            return true;
-
-        else
-            return false;
+    public File searchFile(String name) {
+        return findFileRecursive(name, root);
     }
 
     // DEBUG:
@@ -344,23 +362,21 @@ public class FileSystem {
 
         }
 
-        static void printContentsWithDate(Directory directory) {
+        static void printContentsWithSpaces(Directory directory, int spaces) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
-            StringBuilder sBuilder = new StringBuilder();
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("(yyyy-MM-dd HH-mm-ss)");
             while (contents.hasNext()) {
                 currElement = contents.next();
-
+                printSpaces(spaces);
                 if (currElement instanceof Directory) {
-                    sBuilder.append("* ");
-                    sBuilder.append(currElement.getName() + "/ ");
-                    sBuilder.append(dateFormat.format(currElement.getDateCreated()));
+                    System.out.print("* ");
+                    System.out.print(currElement.getName() + "/\n");
+
                 }
 
-                if (currElement instanceof File) {
-                    sBuilder.append(currElement.getName() + "\n");
+                else if (currElement instanceof File) {
+                    System.out.print(currElement.getName() + "\n");
                 }
 
                 else {
@@ -368,7 +384,58 @@ public class FileSystem {
                 }
             }
 
-            System.out.print(sBuilder);
+        }
+
+        static void printContentsWithSubContents(Directory directory) {
+            ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
+            FileSystemElement currElement;
+
+            while (contents.hasNext()) {
+                currElement = contents.next();
+
+                if (currElement instanceof Directory) {
+                    System.out.print("* ");
+                    System.out.print(currElement.getName() + "/\n");
+                    printContentsWithSpaces((Directory) currElement, 2);
+
+                }
+
+                else if (currElement instanceof File) {
+                    System.out.print(currElement.getName() + "\n");
+                }
+
+                else {
+                    throw new TypeNotPresentException("Directory or File", null);
+                }
+            }
+
+        }
+
+        
+
+        static void printContentsWithDate(Directory directory) {
+            ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
+            FileSystemElement currElement;
+       
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("(yyyy-MM-dd HH:mm:ss)");
+            while (contents.hasNext()) {
+                currElement = contents.next();
+
+                if (currElement instanceof Directory) {
+                    System.out.print("* ");
+                    System.out.print(currElement.getName() + "/ ");
+                    System.out.println(dateFormat.format(currElement.getDateCreated()));
+                }
+
+                else if (currElement instanceof File) {
+                    System.out.println(currElement.getName());
+                }
+
+                else {
+                    throw new TypeNotPresentException("Directory or File", null);
+                }
+            }
 
         }
 
@@ -376,7 +443,8 @@ public class FileSystem {
 
     public void listContents(Directory dir) {
         System.out.println("Listing contents of " + dir.getFullPath() + ":");
-        printHelper.printContents(dir);
+        // printHelper.printContents(dir);
+        printHelper.printContentsWithSubContents(dir);
     }
 
     public void sortDirectoryByDate() {
@@ -390,8 +458,13 @@ public class FileSystem {
     public void sortDirectoryByDate(Directory dir) {
         Comparator<FileSystemElement> compareByDate = Comparator.comparing(c -> c.getDateCreated());
         dir.getChildren().sort(compareByDate);
-        printHelper.printContentsWithDate(dir);
+        //printHelper.printContentsWithDate(dir);
     }
+
+
+
+
+
 
     public void sortDirectoryByName(Directory dir) {
         Comparator<FileSystemElement> compareByName = Comparator.comparing(c -> c.getName());
@@ -436,7 +509,7 @@ public class FileSystem {
 
         // don't add first one
         directories.addAll(Arrays.asList(path.split("/")));
-        //remove empty strings
+        // remove empty strings
         directories.removeIf(String::isEmpty);
 
         Directory current = root;
@@ -445,6 +518,7 @@ public class FileSystem {
             current = changeToChildDirectory(directory, current);
         }
 
+        currentDirectory = current;
 
         return current;
     }
