@@ -283,7 +283,7 @@ public class Main {
     private static void sortContentsHelper(FileSystem fs) {
         fs.sortDirectoryByDate();
         
-        System.out.println("Sorted contetns of " + fs.getCurrentDirectory().getFullPath() + " by date created:");
+        System.out.println("Sorted contents of " + fs.getCurrentDirectory().getFullPath() + " by date created:");
 
         fs.printContentsWithDate();
     }

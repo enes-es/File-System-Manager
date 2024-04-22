@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.concurrent.TimeUnit;
 //stream library
 
 import java.util.NoSuchElementException;
@@ -21,8 +22,16 @@ public class FileSystem {
         Directory user = new Directory("user", home);
         Directory Documents = new Directory("Documents", user);
         Directory projects = new Directory("Projects", Documents);
-        Directory project1 = new Directory("Project1", projects);
+
         Directory project2 = new Directory("Project2", projects);
+        // sleep 2 seconds
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {// ignore...
+        }
+
+        Directory project1 = new Directory("Project1", projects);
         File report = new File("Report.docx", project2);
         File notes = new File("Notes.txt", project2);
 
@@ -200,8 +209,7 @@ public class FileSystem {
             return (File) element;
         }
 
-
-        //try going with the subDirectories instead..
+        // try going with the subDirectories instead..
 
         ArrayList<Directory> subDirectories = directoryToSearch.getSubDirectories();
 
@@ -411,12 +419,9 @@ public class FileSystem {
 
         }
 
-        
-
         static void printContentsWithDate(Directory directory) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
-       
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("(yyyy-MM-dd HH:mm:ss)");
             while (contents.hasNext()) {
@@ -458,13 +463,8 @@ public class FileSystem {
     public void sortDirectoryByDate(Directory dir) {
         Comparator<FileSystemElement> compareByDate = Comparator.comparing(c -> c.getDateCreated());
         dir.getChildren().sort(compareByDate);
-        //printHelper.printContentsWithDate(dir);
+        // printHelper.printContentsWithDate(dir);
     }
-
-
-
-
-
 
     public void sortDirectoryByName(Directory dir) {
         Comparator<FileSystemElement> compareByName = Comparator.comparing(c -> c.getName());
