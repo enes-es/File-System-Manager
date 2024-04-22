@@ -1,0 +1,260 @@
+perseverance@perseverance:~/Documents/repos/CSE222/HW-4$ make clear
+make: *** No rule to make target 'clear'.  Stop.
+perseverance@perseverance:~/Documents/repos/CSE222/HW-4$ make clean
+rm *.class 
+perseverance@perseverance:~/Documents/repos/CSE222/HW-4$ make
+javac -classpath . Main.java
+perseverance@perseverance:~/Documents/repos/CSE222/HW-4$ make run
+java Main
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+2
+Listing contents of root:
+* home/
+  * user/
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+8
+Sorted contents of root by date created:
+* home/ (2024-04-23 00:31:40)
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+1
+Current Directory: root
+Enter new directory path: 
+home/user/Documents
+Directory changed to: root/home/user/Documents
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+2
+Listing contents of root/home/user/Documents:
+* Project1/
+* Project2/
+  Report.docx
+  Notes.txt
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+5
+Current directory: root/home/user/Documents
+Enter the name of file/directory to move: Project1
+Enter new directory path: home/user/Documents/Project2
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+2
+Listing contents of root/home/user/Documents:
+* Project2/
+  Report.docx
+  Notes.txt
+  * Project1/
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+8
+Sorted contents of root/home/user/Documents by date created:
+* Project2/ (2024-04-23 00:31:40)
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+7
+* home/
+ * user/
+  * Documents/
+   * Documents/ (Current Directory)
+   * Project2/
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+6
+Current directory: root/home/user/Documents
+Search for file or directory (f/d): f
+Enter name of file to search: Report.docx
+File found: root/home/user/Documents/Project2/Report.docx
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+2
+Listing contents of root/home/user/Documents:
+* Project2/
+  Report.docx
+  Notes.txt
+  * Project1/
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+1
+Current Directory: root/home/user/Documents
+Enter new directory path: 
+home/user/Documents/Project2
+Directory changed to: root/home/user/Documents/Project2
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+4
+Current directory: root/home/user/Documents/Project2
+Delete file or directory (f/d): 
+f
+Enter name of file to delete: Report.docx
+File deleted: Report.docx
+Current directory: root/home/user/Documents/Project2
+Enter name of file/directory to delete: ===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+2
+Listing contents of root/home/user/Documents/Project2:
+Notes.txt
+* Project1/
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+6
+Current directory: root/home/user/Documents/Project2
+Search for file or directory (f/d): d
+Enter name of directory to search: home
+Directory found: root/home
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+6
+Current directory: root/home/user/Documents/Project2
+Search for file or directory (f/d): d
+Enter name of directory to search: Documents
+Directory found: root/home/user/Documents
+===== File System Management Menu =====
+1. Change directory
+2. List directory contents
+3. Create file/directory
+4. Delete file/directory
+5. Move file/directory
+6. Search file/directory
+7. Print directory tree
+8. Sort contents by date created
+9. Exit
+Please select an option:
+9
+Exiting program..

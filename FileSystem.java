@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +58,8 @@ public class FileSystem {
         File newFile = new File(name, parent);
         parent.addElement(newFile);
         return newFile;
-        // IMPROVEMENT: check for duplicates and throw if there is duplicate!
+        // IMPROVEMENT: check for duplicates and throw if there is duplicate! //DECIDE:
+        // maybe just do (+1) or something?
     }
 
     public Directory createDirectory(String name, Directory parent) {
@@ -343,6 +343,11 @@ public class FileSystem {
         }
 
         // CHECK
+        /**
+         * : prints the contents of the directory
+         * 
+         * @param directory
+         */
         static void printContents(Directory directory) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
@@ -370,6 +375,12 @@ public class FileSystem {
 
         }
 
+        /**
+         * : prints the contents of the directory with spaces
+         * 
+         * @param directory directory to be printed
+         * @param spaces    number of spaces for each line
+         */
         static void printContentsWithSpaces(Directory directory, int spaces) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
@@ -394,6 +405,11 @@ public class FileSystem {
 
         }
 
+        /**
+         * : prints the contents of the directory with subcontents
+         * 
+         * @param directory
+         */
         static void printContentsWithSubContents(Directory directory) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
@@ -419,6 +435,11 @@ public class FileSystem {
 
         }
 
+        /**
+         * prints the contents of the directory with date
+         * 
+         * @param directory directory to be printed
+         */
         static void printContentsWithDate(Directory directory) {
             ListIterator<FileSystemElement> contents = directory.getChildren().listIterator();
             FileSystemElement currElement;
@@ -446,26 +467,57 @@ public class FileSystem {
 
     }
 
+    /**
+     * lists the contents of the current directory
+     * 
+     */
+    public void listContents() {
+        System.out.println("Listing contents of " + currentDirectory.getFullPath() + ":");
+        // printHelper.printContents(currentDirectory);
+        printHelper.printContentsWithSubContents(currentDirectory);
+    }
+
+    /**
+     * lists the contents of the directory
+     * 
+     * @param dir
+     */
     public void listContents(Directory dir) {
         System.out.println("Listing contents of " + dir.getFullPath() + ":");
         // printHelper.printContents(dir);
         printHelper.printContentsWithSubContents(dir);
     }
 
+    /**
+     * Sorts directory in descending date
+     */
     public void sortDirectoryByDate() {
         sortDirectoryByDate(getCurrentDirectory());
     }
 
+    /**
+     * Sorts directory in descending name
+     */
     public void sortDirectoryByName() {
         sortDirectoryByName(getCurrentDirectory());
     }
 
+    /**
+     * sorts directory in descending date
+     * 
+     * @param dir directory to be sorted
+     */
     public void sortDirectoryByDate(Directory dir) {
         Comparator<FileSystemElement> compareByDate = Comparator.comparing(c -> c.getDateCreated());
         dir.getChildren().sort(compareByDate);
         // printHelper.printContentsWithDate(dir);
     }
 
+    /**
+     * Sorts directory in descending name
+     * 
+     * @param dir directory to be sorted
+     */
     public void sortDirectoryByName(Directory dir) {
         Comparator<FileSystemElement> compareByName = Comparator.comparing(c -> c.getName());
 
@@ -479,6 +531,12 @@ public class FileSystem {
         return currentDirectory;
     }
 
+    /**
+     * : gets the directory from the path
+     * 
+     * @param path
+     * @return
+     */
     public Directory getDirectory(String path) {
 
         ArrayList<String> directories = new ArrayList<>();
@@ -495,6 +553,12 @@ public class FileSystem {
         return current;
     }
 
+    /**
+     * : changes the current directory to the directory in the path
+     * 
+     * @param path
+     * @return
+     */
     public Directory changeDirectory(String path) {
         // find the directory
         // if found, set currentDirectory to that directory
@@ -523,15 +587,33 @@ public class FileSystem {
         return current;
     }
 
+    /**
+     * changes the current directory to the directory
+     * 
+     * @param dir
+     * @return
+     */
     public Directory changeDirectory(Directory dir) {
         currentDirectory = dir;
         return dir;
     }
 
+    /**
+     * changes the current directory to the child directory
+     * 
+     * @param dirName
+     * @return
+     */
     public Directory changeToChildDirectory(String dirName) {
         return changeToChildDirectory(dirName, currentDirectory);
     }
 
+    /**
+     * changes the current directory to the child directory
+     * @param dirName
+     * @param parentDirectory
+     * @return
+     */
     public Directory changeToChildDirectory(String dirName, Directory parentDirectory) {
 
         Directory newDirectory;
