@@ -1,4 +1,5 @@
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
@@ -24,22 +25,22 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    changeDirectoryHelper(scanner, fs);
+                    changeDirectoryHelper(fs, scanner);
                     break;
                 case 2:
                     listContentsHelper(fs);
                     break;
                 case 3:
-                    createElementHelper(fs);
+                    createElementHelper(fs, scanner);
                     break;
                 case 4:
-                    deleteElementHelper(fs);
+                    deleteElementHelper(fs, scanner);
                     break;
                 case 5:
-                    moveElementHelper(fs);
+                    moveElementHelper(fs, scanner);
                     break;
                 case 6:
-                    searchHelper(fs);
+                    searchHelper(fs, scanner);
                     break;
                 case 7:
                     printDirectoryTreeHelper(fs);
@@ -73,63 +74,158 @@ public class Main {
         System.out.println("Please select an option:");
     }
 
-    private static void changeDirectoryHelper(Scanner scanner, FileSystem fs) {
-        String newPath = null;
-        fs.getCurrentDirectory();
-        fs.changeDirectory(newPath);
-        
-        System.out.println("Current Directory: " + fs.getCurrentDirectory());
+    private static void changeDirectoryHelper(FileSystem fs, Scanner scanner) {
+        String newPath = new String();
+
+        System.out.println("Current Directory: " + fs.getCurrentDirectory().getFullPath());
         System.out.println("Enter new directory path: ");
 
-        newPath = scanner.next();
-
         
+        newPath = scanner.nextLine();
+        fs.changeDirectory(newPath);
 
-
-
+        System.out.println("Directory changed to: " + fs.getCurrentDirectory().getFullPath());
     }
 
     private static void listContentsHelper(FileSystem fs) {
+        fs.listContents(fs.getCurrentDirectory());
+    }
+
+    private static void createElementHelper(FileSystem fs, Scanner scan) {
+        @SuppressWarnings("{resource}")
+        String inputText;
+        System.out.println("Current directory: " + fs.getCurrentDirectory().getFullPath());
+        System.out.print("Delete file or directory (f/d)");
+
+        inputText = scan.nextLine().trim().toLowerCase();
+
+        if (inputText.equals("f")) {
+            createFileHelper(fs, scan);
+        }
+
+        else if (inputText.equals("d")) {
+            createDirectoryHelper(fs, scan);
+        }
+
+        else {
+            System.out.println("Please try again! Input ` f ` for file and ` d ` for directory!");
+            createElementHelper(fs, scan);
+        }
 
     }
 
-    private static void createElementHelper(FileSystem fs) {
+    private static void createFileHelper(FileSystem fs, Scanner scan) {
+        String fileName;
+        File newFile;
+        System.out.println("Enter name for new file: ");
+
+        fileName = scan.nextLine();
+
+        newFile = fs.createFile(fileName);
+
+        System.out.println("File created: " + newFile.getName());
 
     }
 
-    private static void createFileHelper(FileSystem fs) {
+    private static void createDirectoryHelper(FileSystem fs, Scanner scan) {
+        String dirName;
+        Directory newDir;
+        System.out.println("Enter name for new directory: ");
+
+        dirName = scan.nextLine();
+
+        newDir = fs.createDirectory(dirName);
+
+        System.out.println("Directory created: " + newDir.getName());
     }
 
-    private static void createDirectoryHelper(FileSystem fs) {
+    private static void deleteElementHelper(FileSystem fs, Scanner scan) {
+        String option;
+
+        System.out.println("Current directory: " + fs.getCurrentDirectory().getFullPath());
+        System.out.println("Delete file or directory (f/d): ");
+
+        option = scan.nextLine().trim().toLowerCase();
+
+        if (option.equals("f")) {
+            deleteFileHelper(fs, scan);
+        }
+
+        if (option.equals("d")) {
+            deleteDirectoryHelper(fs, scan);
+        } else {
+            System.out.println("Please try again! Input ` f ` for file and ` d ` for directory!");
+            deleteElementHelper(fs, scan);
+        }
+
+        option = scan.nextLine();
+
+        System.out.println("Current directory: " + fs.getCurrentDirectory().getFullPath());
+        System.out.print("Enter name of file/directory to delete: ");
 
     }
 
-    private static void deleteElementHelper(FileSystem fs) {
+    private static void deleteFileHelper(FileSystem fs, Scanner scan) {
+        String fileName;
+        File deleted;
+        System.out.print("Enter name of file to delete: ");
+
+        fileName = scan.nextLine().trim();
+
+        deleted = fs.deleteFile(fileName, fs.getCurrentDirectory());
+
+        System.out.println("File deleted: " + deleted.getName());
 
     }
 
-    private static void deleteFileHelper(FileSystem fs) {
+    private static void deleteDirectoryHelper(FileSystem fs, Scanner scan) {
+        String dirName;
+        FileSystemElement deleted;
+        System.out.print("Enter name of file/directory to delete: ");
+
+        dirName = scan.nextLine().trim();
+
+        try {
+            deleted = fs.deleteFile(dirName, fs.getCurrentDirectory());
+            System.out.println("File deleted: " + deleted.getName());
+
+        } catch (NoSuchElementException e) {
+            deleted = fs.deleteDirectory(dirName, fs.getCurrentDirectory());
+            System.out.println("Directory deleted: " + deleted.getName());
+        }
 
     }
 
-    private static void deleteDirectoryHelper(FileSystem fs) {
+    private static void moveElementHelper(FileSystem fs, Scanner scan) {
+        String elementName;
+        String newPath;
+
+        System.out.println("Current directory: " + fs.getCurrentDirectory().getFullPath());
+
+        System.out.print("Enter the name of file/directory to move: ");
+        elementName = scan.nextLine().trim();
+
+        System.out.print("Enter new directory path: ");
+        newPath = scan.nextLine().trim();
+
+        fs.moveElement(elementName, fs.getDirectory(newPath));
 
     }
 
-    private static void moveElementHelper(FileSystem fs) {
-
-    }
-
-    private static void searchHelper(FileSystem fs) {
+    private static void searchHelper(FileSystem fs, Scanner scan) {
 
     }
 
     private static void printDirectoryTreeHelper(FileSystem fs) {
-
+        fs.printDirectoryTree();
     }
 
     private static void sortContentsHelper(FileSystem fs) {
+        fs.sortDirectoryByDate();
+        
+        System.out.println("Sorted contetns of " + fs.getCurrentDirectory().getFullPath() + " by date created:");
 
+        fs.printContents();
     }
 
 }
